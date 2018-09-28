@@ -19,7 +19,7 @@ def get_db():
         print('Error: unable to connect mongodb!')
         return None
 
-def POST(post, collection):
+def POST(collection, post):
     collection = get_db()[collection]
     collection.insert_one(post)
 
@@ -31,27 +31,42 @@ def GET(collection, query = None):
    
     results = dict(zip(range(len(results)),results)) 
     results['length'] = len(results)
-    return json.dumps(results)
+    return results
 
-class User(Resource):
-    def get(self): # for login function
-        # GET /user?user_name=<xxx>&password=<xxx>
-        user_name = request.args.get('user_name', '')
-        password = request.args.get('password', '')
+class Session_token:
+    def __init__(self):
 
-        user = GET({'user':user_name, 'password':password})
 
-    def post(self): # for sign up function
-        pass
+class Test(Resource):
+    def get(self, arg):
+        return json.dumps({'message':'connection established!', 'arg':arg})
+
+class Login(Resource):
+    def get(self, user_name, password): # for login function
+        print('#debug print:', (user_name, password))
+        user = GET('user_profile', {'user':user_name, 'password':password})
+        return 
+
+class Sign_up(Resource):
+    def get(self, user_name, password, email):
+        print('#debug print:', (user_name, password))
+        user = {'user':user_name, 'password':password, 'email':email}
+        user_exist = GET('user_profile',user)['length'] != 0
+        print('#debug print: user exist', GET('user_profile',user), user_exist) 
+        if user_exist:
+            return 'user already exist!'
+        else:
+            POST('user_profile',user)
+            return 'sign up successful!'
+
 
 app = Flask(__name__)
 api = Api(app)
 
-api.add_resource(User,'/user')
+api.add_resource(Test,'/test/<arg>')
+api.add_resource(Login,'/login/<user_name>/<password>')
+api.add_resource(Sign_up,'/signup/<user_name>/<password>/<email>')
 
 if __name__ == "__main__":
-    user = {'user':'Boheng Luan','password':'987'}
-    POST(user, 'user_profile')
-    print(GET('user_profile'))
+    app.run('115.146.92.114',port=8888)
 
-    app.run(port=5002)

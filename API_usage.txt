@@ -1,0 +1,5 @@
+for sign up:
+http://115.146.92.114:8888/signup/<user name>/<password>/<email>
+
+for login:
+http://115.146.92.114:8888/login/<user name>/<password>
