@@ -1,5 +1,29 @@
 for sign up:
-http://115.146.92.114:8888/signup/<user name>/<password>/<email>
+request:
+	http://115.146.92.114:8888/signup/<user name>/<password>/<email>
+response:
+	{'message':'xxx'}
+
+
 
 for login:
-http://115.146.92.114:8888/login/<email>/<password>
+request:
+	http://115.146.92.114:8888/login/<email>/<password>
+response:
+	{'message':'xxx','token':'xxx'}
+
+
+
+for create order:
+request:
+	http://115.146.92.114:8888/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>
+response:
+	{'message':'xxx'}
+	
+
+
+for view order:
+request:
+	http://115.146.92.114:8888/vieworder/<token>
+response:
+	{'length':'10', '0':'xxx', ... ,'9':'xxx'}
