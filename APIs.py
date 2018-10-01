@@ -7,7 +7,7 @@ import json
 import pymongo  # pip install pymongo
 from bson import json_util 
 from pymongo import MongoClient# Comes with pymongo
-import os
+import random
 
 print('package loaded!')
 
@@ -40,7 +40,8 @@ class Session_token:
         self.token2user = dict()
     
     def new_session(self, email):
-        token = str(os.urandom(32))
+        #token = str(os.urandom(32))
+        token = str(random.random())[2:]
         self.user2token[email] = token
         self.token2user[token] = email
         return token
@@ -63,7 +64,7 @@ class Login(Resource):
             message = {'message':'incorrect email or password'}
         else:
             token = str(token_cache.new_session(email))
-            message = {'message':'login successful! ' + token}
+            message = {'message':'login successful!', 'token':token}
         resp = Response(json.dumps(message))
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp 
@@ -71,9 +72,16 @@ class Login(Resource):
 class Sign_up(Resource):
     def get(self, user_name, password, email):
         print('#debug print:', (user_name, password))
-        user = {'user':user_name, 'password':password, 'email':email}
+        
+        user = {
+                'user':user_name, 
+                'password':password, 
+                'email':email
+                }
+
         user_exist = GET('user_profile',user)['length'] != 0
         print('#debug print: user exist', GET('user_profile',user), user_exist) 
+        
         if user_exist:
             message = json.dumps({'message':'user already exist!'})
         else:
@@ -83,12 +91,59 @@ class Sign_up(Resource):
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
 
+class Create_order(Resource):
+    def get(self, token, num_box, addr_Jakarta, addr_melb, shipment_id, message):
+        print('#debug print: token', token)
+        email = token_cache.token2user[token]
+        
+        request = {
+                'sender':email,
+                'num_box':num_box,
+                'addr_Jakarta':addr_Jakarta,
+                'addr_melb':addr_melb,
+                'shipment_id':shipment_id,
+                'message':message
+                }
+
+        ack = {
+                'status':'To be Approved',
+                'time_pickup':'',
+                'cost':num_box,
+                'num_hbl':'',
+                'message':''
+                }
+
+        order = dict()
+        order['request'] = request
+        order['ack'] = ack
+
+        POST('orders', order)
+        message = json.dumps({'message':'order created successful!'})
+        resp = Response(message)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
+class View_order(Resource):
+    def get(self, token):
+        print('#debug print: token', token)
+        email = token_cache.token2user[token]
+        orders = GET('orders', {'request.sender':email})
+        
+        message = json.dumps(orders)
+        resp = Response(message)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
+
+
 app = Flask(__name__)
 api = Api(app)
 
 api.add_resource(Test,'/test/<arg>')
 api.add_resource(Login,'/login/<email>/<password>')
 api.add_resource(Sign_up,'/signup/<user_name>/<password>/<email>')
+api.add_resource(Create_order, '/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>')
+api.add_resource(View_order,'/vieworder/<token>')
 
 if __name__ == "__main__":
     #app.run('115.146.92.114', port=8888, ssl_context='adhoc')
