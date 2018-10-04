@@ -27,3 +27,12 @@ request:
 	http://115.146.92.114:8888/vieworder/<token>
 response:
 	{'length':'10', '0':'xxx', ... ,'9':'xxx'}
+
+
+get ship information:
+request:
+	http://115.146.92.114:8888/ship
+response:
+	{"0": {"ship_id": "1", "depart_date": "xxxx.xx.x1", "estimate_arrive_date": "xxxx.xx.x1"}, 
+	 "1": {"ship_id": "2", "depart_date": "xxxx.xx.x2", "estimate_arrive_date": "xxxx.xx.x2"}, 
+	 "length": "2"}

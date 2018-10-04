@@ -8,6 +8,7 @@ import pymongo  # pip install pymongo
 from bson import json_util 
 from pymongo import MongoClient# Comes with pymongo
 import random
+from bson.objectid import ObjectId
 
 print('package loaded!')
 
@@ -23,6 +24,12 @@ def get_db():
 def POST(collection, post):
     collection = get_db()[collection]
     collection.insert_one(post)
+
+def UPDATE(collection, _id, post): 
+    collection = get_db()[collection]
+    query = {'_id':ObjectId(_id)}
+    new_value = {'$set':post}
+    collection.update_one(query, new_value)
 
 def GET(collection, query = None): 
     collection = get_db()[collection]
@@ -61,7 +68,7 @@ class Login(Resource):
         query =  {'email':email, 'password':password}
         user = GET('user_profile', query)
         if user['length'] == 0:
-            message = {'message':'incorrect email or password'}
+            message = {'message':'incorrect email or password', 'token':'null'}
         else:
             token = str(token_cache.new_session(email))
             message = {'message':'login successful!', 'token':token}
@@ -70,14 +77,66 @@ class Login(Resource):
         return resp 
 
 class Sign_up(Resource):
-    def get(self, user_name, password, email):
+    def get(self, user_name, password, email, addr, phone_num):
         print('#debug print:', (user_name, password))
         
         user = {
                 'user':user_name, 
                 'password':password, 
-                'email':email
+                'email':email,
+                'address':addr,
+                'phone':phone_num
                 }
+
+        user_exist = GET('user_profile',user)['length'] != 0
+        print('#debug print: user exist', GET('user_profile',user), user_exist) 
+        
+        if user_exist:
+            message = json.dumps({'message':'user already exist!'})
+        else:
+            POST('user_profile',user)
+            message = json.dumps({'message':'sign up successful!'})
+        resp = Response(message)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
+class Shippment(Resource):
+    def get(self):
+        message = { '0':{
+                        'ship_id':'1',
+                        'depart_date':'xxxx.xx.x1',
+                        'estimate_arrive_date':'xxxx.xx.x1'
+                        },
+                    '1':{
+                        'ship_id':'2',
+                        'depart_date':'xxxx.xx.x2',
+                        'estimate_arrive_date':'xxxx.xx.x2'
+                        },
+                    'length':'2'
+                    }
+        message = json.dumps(message)
+        resp = Response(message)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
+class Update_user(Resource):
+    def get(self, token, user_name, password, email, addr, phone_num):
+        print('#debug print:', (user_name, password))
+        target_user_email = token_cache.token2user[token]
+        query = {'email':target_user_email}
+         
+        user_id = GET('user_profile',query)['0']['_id']
+
+
+        user = {
+                'user':user_name, 
+                'password':password, 
+                'email':email,
+                'address':addr,
+                'phone':phone_num
+                }
+
+
 
         user_exist = GET('user_profile',user)['length'] != 0
         print('#debug print: user exist', GET('user_profile',user), user_exist) 
@@ -136,12 +195,14 @@ class View_order(Resource):
 
 
 
+
 app = Flask(__name__)
 api = Api(app)
 
 api.add_resource(Test,'/test/<arg>')
+api.add_resource(Shippment,'/ship')
 api.add_resource(Login,'/login/<email>/<password>')
-api.add_resource(Sign_up,'/signup/<user_name>/<password>/<email>')
+api.add_resource(Sign_up,'/signup/<user_name>/<password>/<email>/<addr>/<phone_num>')
 api.add_resource(Create_order, '/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>')
 api.add_resource(View_order,'/vieworder/<token>')
 
