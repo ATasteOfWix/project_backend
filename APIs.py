@@ -158,8 +158,8 @@ class Create_order(Resource):
         request = {
                 'sender':email,
                 'num_box':num_box,
-                'addr_Jakarta':addr_Jakarta,
-                'addr_melb':addr_melb,
+                'addr_dest':addr_Jakarta,
+                'addr_pick':addr_melb,
                 'shipment_id':shipment_id,
                 'message':message
                 }

@@ -16,7 +16,7 @@ response:
 
 for create order:
 request:
-	http://115.146.92.114:8888/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>
+	http://115.146.92.114:8888/createorder/<token>/<num_box>/<addr_dest>/<addr_pick>/<shipment_id>/<message>
 response:
 	{'message':'xxx'}
 	
@@ -27,6 +27,24 @@ request:
 	http://115.146.92.114:8888/vieworder/<token>
 response:
 	{'length':'10', '0':'xxx', ... ,'9':'xxx'}
+
+each order information:
+	'request':{
+                 'sender':email,
+                 'num_box':num_box,
+                 'addr_dest':addr_Jakarta,
+                 'addr_pick':addr_melb,
+                 'shipment_id':shipment_id,
+                 'message':message
+                 }
+ 
+         'ack':  {
+                 'status':'To be Approved',
+                 'time_pickup':'',
+                 'cost':num_box,
+                 'num_hbl':'',
+                 'message':''
+                 }
 
 
 get ship information:
