@@ -36,6 +36,15 @@ request:
 response:
 	{'length':'10', '0':'xxx', ... ,'9':'xxx'}
 
+for each user
+		{
+                'user':user_name, 
+                'password':password, 
+                'email':email,
+                'address':addr,
+                'phone':phone_num
+                }
+
 
 for view order:
 request:
