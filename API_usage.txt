@@ -1,6 +1,14 @@
 for sign up:
 request:
-	http://115.146.92.114:8888/signup/<user name>/<password>/<email>
+	http://115.146.92.114:8888/signup/<user_name>/<password>/<email>/<phone_num>
+response:
+	{'message':'xxx'}
+
+
+
+for update user profile:
+request:
+	http://115.146.92.114:8888/updateuser/<user_name>/<password>/<email>/<phone_num>
 response:
 	{'message':'xxx'}
 

@@ -136,16 +136,8 @@ class Update_user(Resource):
                 'phone':phone_num
                 }
 
-
-
-        user_exist = GET('user_profile',user)['length'] != 0
-        print('#debug print: user exist', GET('user_profile',user), user_exist) 
-        
-        if user_exist:
-            message = json.dumps({'message':'user already exist!'})
-        else:
-            POST('user_profile',user)
-            message = json.dumps({'message':'sign up successful!'})
+        UPDATE('user_profile', user_id, user) 
+        message = json.dumps({'message':'user profile updated successful!'})
         resp = Response(message)
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
@@ -203,6 +195,7 @@ api.add_resource(Test,'/test/<arg>')
 api.add_resource(Shippment,'/ship')
 api.add_resource(Login,'/login/<email>/<password>')
 api.add_resource(Sign_up,'/signup/<user_name>/<password>/<email>/<addr>/<phone_num>')
+api.add_resource(Update_user,'/updateuser/<token>/<user_name>/<password>/<email>/<addr>/<phone_num>')
 api.add_resource(Create_order, '/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>')
 api.add_resource(View_order,'/vieworder/<token>')
 
