@@ -57,6 +57,7 @@ class Session_token:
         return token in self.token2user
 
 token_cache = Session_token()
+super_user = ['susanto.collector@gmail.com', 'susanto.shipper@google.com']
 
 class Test(Resource):
     def get(self, arg):
@@ -194,7 +195,9 @@ class View_order(Resource):
         print('#debug print: token', token)
         email = token_cache.token2user[token]
         orders = GET('orders', {'request.sender':email})
-        
+        if email in super_user:
+            orders = GET('orders', {})
+            
         message = json.dumps(orders)
         resp = Response(message)
         resp.headers['Access-Control-Allow-Origin'] = '*'
