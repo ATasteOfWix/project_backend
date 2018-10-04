@@ -158,7 +158,7 @@ class Create_order(Resource):
                 'addr_dest':addr_Jakarta,
                 'addr_pick':addr_melb,
                 'shipment_id':shipment_id,
-                'message':message
+                'message_user':message
                 }
 
         ack = {
@@ -166,7 +166,7 @@ class Create_order(Resource):
                 'time_pickup':'',
                 'cost':num_box,
                 'num_hbl':'',
-                'message':''
+                'message_shipper':''
                 }
 
         order = dict()

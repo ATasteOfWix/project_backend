@@ -59,7 +59,7 @@ each order information:
                  'addr_dest':addr_Jakarta,
                  'addr_pick':addr_melb,
                  'shipment_id':shipment_id,
-                 'message':message
+                 'message_user':message
                  }
  
          'ack':  {
@@ -67,7 +67,7 @@ each order information:
                  'time_pickup':'',
                  'cost':num_box,
                  'num_hbl':'',
-                 'message':''
+                 'message_shipper':''
                  }
 
 
