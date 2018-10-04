@@ -1,4 +1,4 @@
-for sign up:
+1.for sign up:
 request:
 	http://115.146.92.114:8888/signup/<user_name>/<password>/<email>/<phone_num>
 response:
@@ -6,7 +6,7 @@ response:
 
 
 
-for update user profile:
+2.for update user profile:
 request:
 	http://115.146.92.114:8888/updateuser/<token>/<user_name>/<password>/<email>/<phone_num>
 response:
@@ -14,7 +14,7 @@ response:
 
 
 
-for login:
+3.for login:
 request:
 	http://115.146.92.114:8888/login/<email>/<password>
 response:
@@ -22,7 +22,7 @@ response:
 
 
 
-for create order:
+4.for create order:
 request:
 	http://115.146.92.114:8888/createorder/<token>/<num_box>/<addr_dest>/<addr_pick>/<shipment_id>/<message>
 response:
@@ -30,7 +30,7 @@ response:
 	
 
 
-for view user:
+5.for view user:
 request:
 	http://115.146.92.114:8888/viewuser/<token>
 response:
@@ -46,7 +46,7 @@ for each user
                 }
 
 
-for view order:
+6.for view order:
 request:
 	http://115.146.92.114:8888/vieworder/<token>
 response:
@@ -71,7 +71,7 @@ each order information:
                  }
 
 
-get ship information:
+7.get ship information:
 request:
 	http://115.146.92.114:8888/ship
 response:
