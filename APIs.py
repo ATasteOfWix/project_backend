@@ -72,6 +72,7 @@ class Login(Resource):
         else:
             token = str(token_cache.new_session(email))
             message = {'message':'login successful!', 'token':token}
+        print('#debug print',token)
         resp = Response(json.dumps(message))
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp 
@@ -100,24 +101,6 @@ class Sign_up(Resource):
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
 
-class Shippment(Resource):
-    def get(self):
-        message = { '0':{
-                        'ship_id':'1',
-                        'depart_date':'xxxx.xx.x1',
-                        'estimate_arrive_date':'xxxx.xx.x1'
-                        },
-                    '1':{
-                        'ship_id':'2',
-                        'depart_date':'xxxx.xx.x2',
-                        'estimate_arrive_date':'xxxx.xx.x2'
-                        },
-                    'length':'2'
-                    }
-        message = json.dumps(message)
-        resp = Response(message)
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        return resp
 
 class Update_user(Resource):
     def get(self, token, user_name, password, email, addr, phone_num):
@@ -141,6 +124,27 @@ class Update_user(Resource):
         resp = Response(message)
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
+
+
+class Shippment(Resource):
+    def get(self):
+        message = { '0':{
+                        'ship_id':'1',
+                        'depart_date':'xxxx.xx.x1',
+                        'estimate_arrive_date':'xxxx.xx.x1'
+                        },
+                    '1':{
+                        'ship_id':'2',
+                        'depart_date':'xxxx.xx.x2',
+                        'estimate_arrive_date':'xxxx.xx.x2'
+                        },
+                    'length':'2'
+                    }
+        message = json.dumps(message)
+        resp = Response(message)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
 
 class Create_order(Resource):
     def get(self, token, num_box, addr_Jakarta, addr_melb, shipment_id, message):
@@ -174,6 +178,17 @@ class Create_order(Resource):
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
 
+
+class View_user(Resource):
+    def get(self, token):
+        email = token_cache.token2user[token]
+        user = GET('user_profile',{'email':email})
+        message = json.dumps(user)
+        resp = Response(message)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
+
 class View_order(Resource):
     def get(self, token):
         print('#debug print: token', token)
@@ -198,6 +213,7 @@ api.add_resource(Sign_up,'/signup/<user_name>/<password>/<email>/<addr>/<phone_n
 api.add_resource(Update_user,'/updateuser/<token>/<user_name>/<password>/<email>/<addr>/<phone_num>')
 api.add_resource(Create_order, '/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>')
 api.add_resource(View_order,'/vieworder/<token>')
+api.add_resource(View_user,'/viewuser/<token>')
 
 if __name__ == "__main__":
     #app.run('115.146.92.114', port=8888, ssl_context='adhoc')

@@ -30,6 +30,13 @@ response:
 	
 
 
+for view user:
+request:
+	http://115.146.92.114:8888/viewuser/<token>
+response:
+	{'length':'10', '0':'xxx', ... ,'9':'xxx'}
+
+
 for view order:
 request:
 	http://115.146.92.114:8888/vieworder/<token>
