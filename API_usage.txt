@@ -8,7 +8,7 @@ response:
 
 2.for update user profile:
 request:
-	http://115.146.92.114:8888/updateuser/<token>/<user_name>/<password>/<email>/<phone_num>
+	http://115.146.92.114:8888/updateuser/<token>/<user_name>/<password>/<email>/<addr>/<phone_num>
 response:
 	{'message':'xxx'}
 
