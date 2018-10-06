@@ -108,8 +108,8 @@ class Update_user(Resource):
         print('#debug print:', (user_name, password))
         target_user_email = token_cache.token2user[token]
         query = {'email':target_user_email}
-         
-        user_id = GET('user_profile',query)['0']['_id']
+        print('#debug print', GET('user_profile',query) )
+        user_id = GET('user_profile',query)[0]['_id']
 
 
         user = {
