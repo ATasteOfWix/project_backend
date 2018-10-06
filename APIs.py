@@ -127,6 +127,25 @@ class Update_user(Resource):
         return resp
 
 
+class Update_ack(Resource):
+    def get(self, token, order_id, status, time_pickup, message_shipper):
+        target_user_email = token_cache.token2user[token]
+        if target_user_email in super_user:
+            change = {
+                    'ack.status':status,
+                    'ack.time_pickup':time_pickup,
+                    'ack.message_shipper':message_shipper
+                     }
+            UPDATE('orders', order_id, change)
+            message = {'message':'order ACK updated successful!'}
+        else:
+            message = {'message':'not super user!'}
+
+        resp = Resource(json.dumps(message))
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
+
 class Shippment(Resource):
     def get(self):
         message = { '0':{
@@ -217,6 +236,7 @@ api.add_resource(Update_user,'/updateuser/<token>/<user_name>/<password>/<email>
 api.add_resource(Create_order, '/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>')
 api.add_resource(View_order,'/vieworder/<token>')
 api.add_resource(View_user,'/viewuser/<token>')
+api.add_resource(Update_ack,'/updateack/<order_id>/<status>/<time_pickup>/<message_shipper>')
 
 if __name__ == "__main__":
     #app.run('115.146.92.114', port=8888, ssl_context='adhoc')

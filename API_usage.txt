@@ -13,8 +13,14 @@ response:
 	{'message':'xxx'}
 
 
+3.for update order ack:
+request:
+	http://115.146.92.114:8888/updateack/<order_id>/<status>/<time_pickup>/<message_shipper>
+response:
+	{'message':'xxx'}
 
-3.for login:
+
+4.for login:
 request:
 	http://115.146.92.114:8888/login/<email>/<password>
 response:
@@ -22,7 +28,7 @@ response:
 
 
 
-4.for create order:
+5.for create order:
 request:
 	http://115.146.92.114:8888/createorder/<token>/<num_box>/<addr_dest>/<addr_pick>/<shipment_id>/<message>
 response:
@@ -30,7 +36,7 @@ response:
 	
 
 
-5.for view user:
+6.for view user:
 request:
 	http://115.146.92.114:8888/viewuser/<token>
 response:
@@ -46,7 +52,7 @@ for each user
                 }
 
 
-6.for view order:
+7.for view order:
 request:
 	http://115.146.92.114:8888/vieworder/<token>
 response:
@@ -71,7 +77,7 @@ each order information:
                  }
 
 
-7.get ship information:
+8.get ship information:
 request:
 	http://115.146.92.114:8888/ship
 response:
