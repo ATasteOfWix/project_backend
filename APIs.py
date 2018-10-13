@@ -9,6 +9,8 @@ from bson import json_util
 from pymongo import MongoClient# Comes with pymongo
 import random
 from bson.objectid import ObjectId
+from auto_email import send_email
+
 
 print('package loaded!')
 
@@ -57,7 +59,7 @@ class Session_token:
         return token in self.token2user
 
 token_cache = Session_token()
-super_user = ['susanto.collector@gmail.com', 'susanto.shipper@google.com']
+super_user = ['1', 'susanto.collector@gmail.com', 'susanto.shipper@google.com']
 
 class Test(Resource):
     def get(self, arg):
@@ -73,7 +75,7 @@ class Login(Resource):
         else:
             token = str(token_cache.new_session(email))
             message = {'message':'login successful!', 'token':token}
-        print('#debug print',token)
+            print('#debug print',token)
         resp = Response(json.dumps(message))
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp 
@@ -140,9 +142,10 @@ class Update_ack(Resource):
             message = {'message':'order ACK updated successful!'}
         else:
             message = {'message':'not super user!'}
-
-        resp = Resource(json.dumps(message))
+        message = json.dumps(message)
+        resp = Response(message)
         resp.headers['Access-Control-Allow-Origin'] = '*'
+        send_email(target_user_email, 'your order ack has been changed')
         return resp
 
 
@@ -184,7 +187,7 @@ class Create_order(Resource):
                 'status':'To be Approved',
                 'time_pickup':'',
                 'cost':num_box,
-                'num_hbl':'',
+                'num_hbl':str(random.random()),
                 'message_shipper':''
                 }
 
@@ -196,6 +199,7 @@ class Create_order(Resource):
         message = json.dumps({'message':'order created successful!'})
         resp = Response(message)
         resp.headers['Access-Control-Allow-Origin'] = '*'
+        send_email(email, 'new order has been created')
         return resp
 
 
@@ -203,6 +207,7 @@ class View_user(Resource):
     def get(self, token):
         email = token_cache.token2user[token]
         user = GET('user_profile',{'email':email})
+        user['is_super'] = email in super_user
         message = json.dumps(user)
         resp = Response(message)
         resp.headers['Access-Control-Allow-Origin'] = '*'
@@ -236,7 +241,7 @@ api.add_resource(Update_user,'/updateuser/<token>/<user_name>/<password>/<email>
 api.add_resource(Create_order, '/createorder/<token>/<num_box>/<addr_Jakarta>/<addr_melb>/<shipment_id>/<message>')
 api.add_resource(View_order,'/vieworder/<token>')
 api.add_resource(View_user,'/viewuser/<token>')
-api.add_resource(Update_ack,'/updateack/<order_id>/<status>/<time_pickup>/<message_shipper>')
+api.add_resource(Update_ack,'/updateack/<token>/<order_id>/<status>/<time_pickup>/<message_shipper>')
 
 if __name__ == "__main__":
     #app.run('115.146.92.114', port=8888, ssl_context='adhoc')
